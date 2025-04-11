@@ -17,9 +17,6 @@ namespace AnimalSegmentation
         public MainWindow()
         {
             InitializeComponent();
-            KTextBox.TextChanged += KTextBox_TextChanged;
-            CentroidsStackPanel.Visibility = Visibility.Collapsed;
-            UpdateCentroidsPanel();
         }
 
         private void LoadImageButton_Click(object sender, RoutedEventArgs e)
@@ -49,25 +46,12 @@ namespace AnimalSegmentation
                     int k = int.Parse(KTextBox.Text);
                     int maxIterations = int.Parse(MaxIterationsTextBox.Text);
 
-                    double[,] initialCentroids = null;
-                    if (UseCustomCentroidsCheckBox.IsChecked == true)
-                    {
-                        initialCentroids = new double[k, 3];
-                        for (int i = 0; i < k; i++)
-                        {
-                            var panel = (StackPanel)CentroidsPanel.Children[i];
-                            initialCentroids[i, 0] = int.Parse(((TextBox)panel.Children[1]).Text); // R
-                            initialCentroids[i, 1] = int.Parse(((TextBox)panel.Children[3]).Text); // G
-                            initialCentroids[i, 2] = int.Parse(((TextBox)panel.Children[5]).Text); // B
-                        }
-                    }
-
                     Stopwatch stopwatch = new Stopwatch();
                     double[][] pixelData = GetPixelData(originalBitmap);
 
                     // Сегментация с CustomKMeans
                     stopwatch.Start();
-                    var (customImage, customLabels, customCentroids) = customSegmenter.Segment(originalBitmap, k, initialCentroids, maxIterations);
+                    var (customImage, customLabels, customCentroids) = customSegmenter.Segment(originalBitmap, k, null, maxIterations);
                     stopwatch.Stop();
                     CustomSegmentedImage.Source = ImageHelper.BitmapToImageSource(customImage);
                     CustomTimeText.Text = $"Processing Time: {stopwatch.ElapsedMilliseconds} ms";
@@ -76,7 +60,7 @@ namespace AnimalSegmentation
 
                     // Сегментация с AccordKMeans
                     stopwatch.Restart();
-                    var (accordImage, accordLabels, accordCentroids) = accordSegmenter.Segment(originalBitmap, k, initialCentroids, maxIterations);
+                    var (accordImage, accordLabels, accordCentroids) = accordSegmenter.Segment(originalBitmap, k, null, maxIterations);
                     stopwatch.Stop();
                     AccordSegmentedImage.Source = ImageHelper.BitmapToImageSource(accordImage);
                     AccordTimeText.Text = $"Processing Time: {stopwatch.ElapsedMilliseconds} ms";
@@ -85,7 +69,7 @@ namespace AnimalSegmentation
                 }
                 catch (FormatException)
                 {
-                    MessageBox.Show("Please enter valid numbers for K, Max Iterations, and Centroids.");
+                    MessageBox.Show("Please enter valid numbers for K and Max Iterations.");
                 }
             }
         }
@@ -121,41 +105,6 @@ namespace AnimalSegmentation
                 wcss += dist;
             }
             return wcss;
-        }
-
-        private void KTextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            UpdateCentroidsPanel();
-        }
-
-        private void UpdateCentroidsPanel()
-        {
-            CentroidsPanel.Children.Clear();
-            if (int.TryParse(KTextBox.Text, out int k) && k > 0)
-            {
-                for (int i = 0; i < k; i++)
-                {
-                    var panel = new StackPanel { Orientation = Orientation.Horizontal, Margin = new Thickness(0, 0, 0, 5) };
-                    panel.Children.Add(new TextBlock { Text = $"Cluster {i}: ", VerticalAlignment = VerticalAlignment.Center });
-                    panel.Children.Add(new TextBox { Width = 50, Text = $"{i * 50}", Margin = new Thickness(0, 0, 5, 0) }); // R
-                    panel.Children.Add(new TextBlock { Text = ",", VerticalAlignment = VerticalAlignment.Center });
-                    panel.Children.Add(new TextBox { Width = 50, Text = $"{i * 100}", Margin = new Thickness(0, 0, 5, 0) }); // G
-                    panel.Children.Add(new TextBlock { Text = ",", VerticalAlignment = VerticalAlignment.Center });
-                    panel.Children.Add(new TextBox { Width = 50, Text = $"{i * 150}", Margin = new Thickness(0, 0, 5, 0) }); // B
-                    CentroidsPanel.Children.Add(panel);
-                }
-            }
-        }
-
-        private void UseCustomCentroidsCheckBox_Checked(object sender, RoutedEventArgs e)
-        {
-            UpdateCentroidsPanel();
-            CentroidsStackPanel.Visibility = Visibility.Visible;
-        }
-
-        private void UseCustomCentroidsCheckBox_Unchecked(object sender, RoutedEventArgs e)
-        {
-            CentroidsStackPanel.Visibility = Visibility.Collapsed;
         }
     }
 }
