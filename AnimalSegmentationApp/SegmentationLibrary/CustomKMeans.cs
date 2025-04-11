@@ -18,6 +18,7 @@ namespace SegmentationLibrary
             int height = bitmap.Height;
             double[,] features = new double[width * height, 3];
 
+            // Извлечение признаков (RGB) из пикселей
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -30,14 +31,21 @@ namespace SegmentationLibrary
                 }
             }
 
-            double[,] centroids;
+            // Инициализация центроидов
+            double[,] centroids = new double[k, 3];
             if (initialCentroids != null && initialCentroids.GetLength(0) == k && initialCentroids.GetLength(1) == 3)
             {
-                centroids = initialCentroids;
+                // Копируем начальные центроиды, чтобы не изменять входной массив
+                for (int i = 0; i < k; i++)
+                {
+                    centroids[i, 0] = initialCentroids[i, 0];
+                    centroids[i, 1] = initialCentroids[i, 1];
+                    centroids[i, 2] = initialCentroids[i, 2];
+                }
             }
             else
             {
-                centroids = new double[k, 3];
+                // Случайная инициализация центроидов
                 for (int i = 0; i < k; i++)
                 {
                     int randomPixel = rand.Next(features.GetLength(0));
@@ -48,26 +56,37 @@ namespace SegmentationLibrary
             }
 
             int[] labels = new int[features.GetLength(0)];
-            for (int iter = 0; iter < maxIterations; iter++)
+            bool centroidsChanged = true;
+
+            // Итерации K-Means
+            for (int iter = 0; iter < maxIterations && centroidsChanged; iter++)
             {
+                centroidsChanged = false;
+
+                // Шаг 1: Назначение пикселей кластерам
                 for (int i = 0; i < features.GetLength(0); i++)
                 {
                     double minDist = double.MaxValue;
+                    int bestCluster = 0;
                     for (int j = 0; j < k; j++)
                     {
-                        double[] pixelFeatures = new double[3] { features[i, 0], features[i, 1], features[i, 2] };
-                        double[] centroidFeatures = new double[3] { centroids[j, 0], centroids[j, 1], centroids[j, 2] };
-                        double dist = EuclideanDistance(pixelFeatures, centroidFeatures);
+                        double dist = EuclideanDistance(
+                            new double[] { features[i, 0], features[i, 1], features[i, 2] },
+                            new double[] { centroids[j, 0], centroids[j, 1], centroids[j, 2] }
+                        );
                         if (dist < minDist)
                         {
                             minDist = dist;
-                            labels[i] = j;
+                            bestCluster = j;
                         }
                     }
+                    labels[i] = bestCluster;
                 }
 
+                // Шаг 2: Пересчёт центроидов
                 double[,] newCentroids = new double[k, 3];
                 int[] counts = new int[k];
+
                 for (int i = 0; i < features.GetLength(0); i++)
                 {
                     int cluster = labels[i];
@@ -77,17 +96,40 @@ namespace SegmentationLibrary
                     counts[cluster]++;
                 }
 
+                // Обновление центроидов и обработка пустых кластеров
                 for (int j = 0; j < k; j++)
                 {
-                    if (counts[j] > 0)
+                    if (counts[j] == 0)
                     {
+                        // Пустой кластер: выбираем случайный пиксель как новый центроид
+                        int randomPixel = rand.Next(features.GetLength(0));
+                        centroids[j, 0] = features[randomPixel, 0];
+                        centroids[j, 1] = features[randomPixel, 1];
+                        centroids[j, 2] = features[randomPixel, 2];
+                        centroidsChanged = true;
+                    }
+                    else
+                    {
+                        double oldR = centroids[j, 0];
+                        double oldG = centroids[j, 1];
+                        double oldB = centroids[j, 2];
+
                         centroids[j, 0] = newCentroids[j, 0] / counts[j];
                         centroids[j, 1] = newCentroids[j, 1] / counts[j];
                         centroids[j, 2] = newCentroids[j, 2] / counts[j];
+
+                        // Проверяем, изменились ли центроиды
+                        if (Math.Abs(oldR - centroids[j, 0]) > 0.1 ||
+                            Math.Abs(oldG - centroids[j, 1]) > 0.1 ||
+                            Math.Abs(oldB - centroids[j, 2]) > 0.1)
+                        {
+                            centroidsChanged = true;
+                        }
                     }
                 }
             }
 
+            // Создание сегментированного изображения
             Bitmap result = new Bitmap(width, height);
             for (int y = 0; y < height; y++)
             {

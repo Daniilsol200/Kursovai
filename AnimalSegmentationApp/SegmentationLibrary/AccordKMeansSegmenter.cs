@@ -13,26 +13,15 @@ namespace SegmentationLibrary
 
         public (Bitmap Image, int[] Labels, double[,] Centroids) Segment(Bitmap bitmap, int k, double[,] initialCentroids, int maxIterations = 10)
         {
-            var (image, labels, centroidsArray) = SegmentWithArrayCentroids(bitmap, k, initialCentroids, maxIterations);
-            double[,] centroids = new double[k, 3];
-            for (int i = 0; i < k; i++)
-            {
-                centroids[i, 0] = centroidsArray[i][0];
-                centroids[i, 1] = centroidsArray[i][1];
-                centroids[i, 2] = centroidsArray[i][2];
-            }
-            return (image, labels, centroids);
-        }
-
-        public (Bitmap Image, int[] Labels, double[][] Centroids) SegmentWithArrayCentroids(Bitmap bitmap, int k, double[,] initialCentroids, int maxIterations = 10)
-        {
             if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
             if (k <= 0) throw new ArgumentException("Number of clusters must be positive.", nameof(k));
+            if (maxIterations <= 0) throw new ArgumentException("Maximum iterations must be positive.", nameof(maxIterations));
 
             int width = bitmap.Width;
             int height = bitmap.Height;
             double[][] observations = new double[width * height][];
 
+            // Извлечение RGB-значений пикселей
             for (int y = 0; y < height; y++)
             {
                 for (int x = 0; x < width; x++)
@@ -42,28 +31,34 @@ namespace SegmentationLibrary
                 }
             }
 
+            // Настройка K-Means
             KMeans kmeans = new KMeans(k)
             {
                 MaxIterations = maxIterations,
                 Tolerance = 0.01
             };
 
-            if (initialCentroids != null && initialCentroids.GetLength(0) == k && initialCentroids.GetLength(1) == 3)
+            // Инициализация начальных центроидов (с копированием)
+            if (initialCentroids != null)
             {
+                if (initialCentroids.GetLength(0) != k || initialCentroids.GetLength(1) != 3)
+                {
+                    throw new ArgumentException($"Initial centroids must have dimensions [{k}, 3].", nameof(initialCentroids));
+                }
+
                 kmeans.Clusters.Centroids = new double[k][];
                 for (int i = 0; i < k; i++)
                 {
+                    // Копируем значения, чтобы не изменять входной массив
                     kmeans.Clusters.Centroids[i] = new double[] { initialCentroids[i, 0], initialCentroids[i, 1], initialCentroids[i, 2] };
                 }
             }
 
+            // Выполнение кластеризации
             var clusters = kmeans.Learn(observations);
-            int[] labels = new int[observations.Length];
-            for (int i = 0; i < observations.Length; i++)
-            {
-                labels[i] = clusters.Decide(observations[i]);
-            }
+            int[] labels = clusters.Decide(observations);
 
+            // Создание сегментированного изображения
             Bitmap result = new Bitmap(width, height);
             for (int y = 0; y < height; y++)
             {
@@ -80,7 +75,16 @@ namespace SegmentationLibrary
                 }
             }
 
-            return (result, labels, kmeans.Clusters.Centroids);
+            // Преобразование центроидов в double[,]
+            double[,] centroids = new double[k, 3];
+            for (int i = 0; i < k; i++)
+            {
+                centroids[i, 0] = kmeans.Clusters.Centroids[i][0];
+                centroids[i, 1] = kmeans.Clusters.Centroids[i][1];
+                centroids[i, 2] = kmeans.Clusters.Centroids[i][2];
+            }
+
+            return (result, labels, centroids);
         }
     }
 }

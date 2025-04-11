@@ -1,7 +1,7 @@
 ﻿<Window x:Class="AnimalSegmentation.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Animal Segmentation" Height="400" Width="1200">
+        Title="Animal Segmentation" Height="500" Width="1200">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
