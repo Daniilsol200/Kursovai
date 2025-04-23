@@ -7,6 +7,12 @@ namespace SegmentationLibrary
     {
         private readonly Random rand = new Random();
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="k"></param>
+        /// <returns></returns>
         public Bitmap Segment(Bitmap bitmap, int k)
         {
             return Segment(bitmap, k, null, 10).Image;

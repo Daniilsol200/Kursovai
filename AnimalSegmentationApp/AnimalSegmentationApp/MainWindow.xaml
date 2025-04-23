@@ -5,19 +5,13 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
-            <!-- Панель управления -->
             <RowDefinition Height="*"/>
-            <!-- Изображения и метрики -->
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="300"/>
-            <!-- Панель центроидов -->
             <ColumnDefinition Width="*"/>
-            <!-- Оригинальное изображение -->
             <ColumnDefinition Width="*"/>
-            <!-- Custom K-Means -->
             <ColumnDefinition Width="*"/>
-            <!-- Accord K-Means -->
         </Grid.ColumnDefinitions>
 
         <!-- Панель управления -->
@@ -30,13 +24,18 @@
             <TextBox x:Name="MaxIterationsTextBox" Width="50" Text="10" Margin="0,0,10,0"/>
         </StackPanel>
 
-        <!-- Панель центроидов с прокруткой, строго в левой колонке -->
+        <!-- Панель центроидов с прокруткой -->
         <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,10,10,10" MaxWidth="300" Grid.RowSpan="2">
             <StackPanel x:Name="CentroidPanel" VerticalAlignment="Top">
-                <CheckBox x:Name="UseCustomCentroidsCheckBox" Content="Использовать свои центроиды" IsChecked="True" Checked="UseCustomCentroidsCheckBox_Checked" Unchecked="UseCustomCentroidsCheckBox_Unchecked" Margin="0,0,0,10"/>
+                <CheckBox x:Name="UseCustomCentroidsCheckBox" Content="Использовать свои центроиды" IsChecked="False" Checked="UseCustomCentroidsCheckBox_Checked" Unchecked="UseCustomCentroidsCheckBox_Unchecked" Margin="0,0,0,10"/>
                 <TextBlock Text="Начальные центроиды (R,G,B):" VerticalAlignment="Center" Margin="0,0,0,5" TextWrapping="Wrap"/>
                 <StackPanel x:Name="CentroidInputs" Orientation="Vertical" Margin="0,0,0,10"/>
-                <Button x:Name="ApplyCentroidsButton" Content="Применить центроиды" Click="ApplyCentroidsButton_Click" Margin="0,0,0,0"/>
+                <Button x:Name="ApplyCentroidsButton" Content="Применить центроиды" Click="ApplyCentroidsButton_Click" Margin="0,0,0,10"/>
+                <!-- Область для отображения центроидов -->
+                <StackPanel x:Name="CentroidResults" Orientation="Vertical" Visibility="Collapsed">
+                    <TextBlock x:Name="CustomCentroidText" Text="Конечные центроиды CustomKMeans:" Margin="0,0,0,5" TextWrapping="Wrap"/>
+                    <TextBlock x:Name="AccordCentroidText" Text="Конечные центроиды AccordKMeans:" Margin="0,0,0,5" TextWrapping="Wrap"/>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
 
