@@ -8,10 +8,14 @@
             <RowDefinition Height="*"/>
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="300"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="350"/>
+            <!-- Увеличено с 300 до 350 для центроидов -->
+            <ColumnDefinition Width="1.2*"/>
+            <!-- Исходное изображение -->
+            <ColumnDefinition Width="1.2*"/>
+            <!-- Custom K-Means, шире на 20% -->
+            <ColumnDefinition Width="1.2*"/>
+            <!-- Accord K-Means, шире на 20% -->
         </Grid.ColumnDefinitions>
 
         <!-- Панель управления -->
@@ -25,7 +29,7 @@
         </StackPanel>
 
         <!-- Панель центроидов с прокруткой -->
-        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,10,10,10" MaxWidth="300" Grid.RowSpan="2">
+        <ScrollViewer Grid.Column="0" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled" Margin="10,10,10,10" MaxWidth="350" Grid.RowSpan="2">
             <StackPanel x:Name="CentroidPanel" VerticalAlignment="Top">
                 <CheckBox x:Name="UseCustomCentroidsCheckBox" Content="Использовать свои центроиды" IsChecked="False" Checked="UseCustomCentroidsCheckBox_Checked" Unchecked="UseCustomCentroidsCheckBox_Unchecked" Margin="0,0,0,10"/>
                 <TextBlock Text="Начальные центроиды (R,G,B):" VerticalAlignment="Center" Margin="0,0,0,5" TextWrapping="Wrap"/>

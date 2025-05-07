@@ -16,7 +16,7 @@ namespace AnimalSegmentation
         private AccordKMeansSegmenter accordSegmenter = new AccordKMeansSegmenter();
         private double[,] userCentroids;
         private List<TextBox[]> centroidTextBoxes = new List<TextBox[]>();
-        private bool useCustomCentroids = true;
+        private bool useCustomCentroids = false; // Изменено с true на false
 
         public MainWindow()
         {
@@ -42,6 +42,10 @@ namespace AnimalSegmentation
                 MessageBox.Show("CentroidInputs null в MainWindow_Loaded! UI не загружен корректно.");
                 return;
             }
+
+            // Синхронизируем состояние элементов управления с начальным значением useCustomCentroids
+            CentroidInputs.IsEnabled = useCustomCentroids;
+            if (ApplyCentroidsButton != null) ApplyCentroidsButton.IsEnabled = useCustomCentroids;
 
             if (int.TryParse(KTextBox?.Text, out int k) && k > 0)
             {
@@ -184,14 +188,14 @@ namespace AnimalSegmentation
                     }
 
                     Stopwatch stopwatch = new Stopwatch();
-                    double[][] pixelData = GetPixelData(originalBitmap);
+                    double[][] pixelData = SegmentationUtils.GetPixelData(originalBitmap);
 
                     stopwatch.Start();
                     var (customImage, customLabels, customCentroids) = customSegmenter.Segment(originalBitmap, k, centroidsToUse, maxIterations);
                     stopwatch.Stop();
                     if (CustomSegmentedImage != null) CustomSegmentedImage.Source = ImageHelper.BitmapToImageSource(customImage);
                     if (CustomTimeText != null) CustomTimeText.Text = $"Время обработки: {stopwatch.ElapsedMilliseconds} мс";
-                    double customWcss = CalculateWcss(pixelData, customLabels, customCentroids);
+                    double customWcss = SegmentationUtils.CalculateWcss(pixelData, customLabels, customCentroids);
                     if (CustomQualityText != null) CustomQualityText.Text = $"Оценка качества: {customWcss:F2}";
 
                     string customCentroidLog = "Конечные центроиды CustomKMeans:\n";
@@ -205,7 +209,7 @@ namespace AnimalSegmentation
                     stopwatch.Stop();
                     if (AccordSegmentedImage != null) AccordSegmentedImage.Source = ImageHelper.BitmapToImageSource(accordImage);
                     if (AccordTimeText != null) AccordTimeText.Text = $"Время обработки: {stopwatch.ElapsedMilliseconds} мс";
-                    double accordWcss = CalculateWcss(pixelData, accordLabels, accordCentroids);
+                    double accordWcss = SegmentationUtils.CalculateWcss(pixelData, accordLabels, accordCentroids);
                     if (AccordQualityText != null) AccordQualityText.Text = $"Оценка качества: {accordWcss:F2}";
 
                     string accordCentroidLog = "Конечные центроиды AccordKMeans:\n";
@@ -247,39 +251,6 @@ namespace AnimalSegmentation
                     MessageBox.Show("Пожалуйста, введите корректные числа для K и максимального числа итераций.");
                 }
             }
-        }
-
-        private double[][] GetPixelData(Bitmap bitmap)
-        {
-            int width = bitmap.Width;
-            int height = bitmap.Height;
-            double[][] data = new double[width * height][];
-            for (int y = 0; y < height; y++)
-            {
-                for (int x = 0; x < width; x++)
-                {
-                    Color pixel = bitmap.GetPixel(x, y);
-                    data[y * width + x] = new double[] { pixel.R, pixel.G, pixel.B };
-                }
-            }
-            return data;
-        }
-
-        private double CalculateWcss(double[][] pixels, int[] labels, double[,] centroids)
-        {
-            double wcss = 0;
-            for (int i = 0; i < pixels.Length; i++)
-            {
-                int cluster = labels[i];
-                double dist = 0;
-                for (int j = 0; j < 3; j++)
-                {
-                    double diff = pixels[i][j] - centroids[cluster, j];
-                    dist += diff * diff;
-                }
-                wcss += dist;
-            }
-            return wcss;
         }
     }
 }
