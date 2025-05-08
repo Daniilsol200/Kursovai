@@ -4,13 +4,36 @@ using Accord.MachineLearning;
 
 namespace SegmentationLibrary
 {
+    /// <summary>
+    /// Класс, реализующий сегментацию изображений с использованием алгоритма K-Means из библиотеки Accord.
+    /// Реализует интерфейс <see cref="ISegmenter"/> для унификации работы с различными сегментаторами.
+    /// </summary>
     public class AccordKMeansSegmenter : ISegmenter
     {
+        /// <summary>
+        /// Выполняет сегментацию входного изображения на основе заданного количества кластеров (k).
+        /// Использует алгоритм K-Means из библиотеки Accord с настройками по умолчанию (10 итераций).
+        /// </summary>
+        /// <param name="bitmap">Входное изображение в формате Bitmap, которое будет сегментировано.</param>
+        /// <param name="k">Количество кластеров, на которые будет разделено изображение.</param>
+        /// <returns>Сегментированное изображение в формате Bitmap.</returns>
         public Bitmap Segment(Bitmap bitmap, int k)
         {
             return Segment(bitmap, k, null, 10).Image;
         }
 
+        /// <summary>
+        /// Выполняет сегментацию входного изображения с использованием алгоритма K-Means из библиотеки Accord.
+        /// Позволяет указать начальные центроиды и максимальное количество итераций.
+        /// </summary>
+        /// <param name="bitmap">Входное изображение в формате Bitmap, которое будет сегментировано.</param>
+        /// <param name="k">Количество кластеров, на которые будет разделено изображение.</param>
+        /// <param name="initialCentroids">Двумерный массив начальных центроидов (опционально). Формат: [k, 3], где 3 — значения RGB (R, G, B).</param>
+        /// <param name="maxIterations">Максимальное количество итераций алгоритма (по умолчанию 10).</param>
+        /// <returns>Кортеж, содержащий сегментированное изображение, метки кластеров и финальные центроиды.</returns>
+        /// <exception cref="ArgumentNullException">Выбрасывается, если входное изображение <paramref name="bitmap"/> равно null.</exception>
+        /// <exception cref="ArgumentException">Выбрасывается, если <paramref name="k"/> или <paramref name="maxIterations"/> меньше или равны 0,
+        /// или если размеры <paramref name="initialCentroids"/> не соответствуют [k, 3].</exception>
         public (Bitmap Image, int[] Labels, double[,] Centroids) Segment(Bitmap bitmap, int k, double[,] initialCentroids, int maxIterations = 10)
         {
             if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
