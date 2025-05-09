@@ -31,10 +31,8 @@ namespace AnimalSegmentation
         /// </summary>
         private AccordKMeansSegmenter accordSegmenter = new AccordKMeansSegmenter();
 
-        /// <summary>
+
         /// Массив пользовательских центроидов, используемых для сегментации, если выбрана соответствующая опция.
-        /// Формат: [k, 3], где k — количество кластеров, 3 — значения RGB (R, G, B).
-        /// </summary>
         private double[,] userCentroids;
 
         /// <summary>
