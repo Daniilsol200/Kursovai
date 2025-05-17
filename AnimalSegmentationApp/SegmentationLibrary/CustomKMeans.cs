@@ -9,14 +9,10 @@ namespace SegmentationLibrary
     /// </summary>
     public class CustomKMeans : ISegmenter
     {
-        /// <summary>
-        /// Генератор случайных чисел, используемый для инициализации центроидов и обработки пустых кластеров.
-        /// </summary>
         private readonly Random rand = new Random();
 
         /// <summary>
         /// Выполняет сегментацию входного изображения на основе заданного количества кластеров (k).
-        /// Использует пользовательский алгоритм K-Means с настройками по умолчанию (10 итераций).
         /// </summary>
         /// <param name="bitmap">Входное изображение в формате Bitmap, которое будет сегментировано.</param>
         /// <param name="k">Количество кластеров, на которые будет разделено изображение.</param>
@@ -35,9 +31,6 @@ namespace SegmentationLibrary
         /// <param name="initialCentroids">Двумерный массив начальных центроидов (опционально). Формат: [k, 3], где 3 — значения RGB (R, G, B).</param>
         /// <param name="maxIterations">Максимальное количество итераций алгоритма (по умолчанию 10).</param>
         /// <returns>Кортеж, содержащий сегментированное изображение, метки кластеров и финальные центроиды.</returns>
-        /// <exception cref="ArgumentNullException">Выбрасывается, если входное изображение <paramref name="bitmap"/> равно null.</exception>
-        /// <exception cref="ArgumentException">Выбрасывается, если <paramref name="k"/> или <paramref name="maxIterations"/> меньше или равны 0,
-        /// или если размеры <paramref name="initialCentroids"/> не соответствуют [k, 3].</exception>
         public (Bitmap Image, int[] Labels, double[,] Centroids) Segment(Bitmap bitmap, int k, double[,] initialCentroids, int maxIterations = 10)
         {
             // Проверка входных параметров
@@ -182,10 +175,7 @@ namespace SegmentationLibrary
         /// <summary>
         /// Вычисляет евклидово расстояние между двумя точками в трёхмерном пространстве (RGB).
         /// </summary>
-        /// <param name="a">Первая точка — массив из трёх значений (R, G, B).</param>
-        /// <param name="b">Вторая точка — массив из трёх значений (R, G, B).</param>
         /// <returns>Евклидово расстояние между точками <paramref name="a"/> и <paramref name="b"/>.</returns>
-        /// <exception cref="ArgumentException">Выбрасывается, если массивы <paramref name="a"/> и <paramref name="b"/> имеют разную длину.</exception>
         private double EuclideanDistance(double[] a, double[] b)
         {
             if (a.Length != b.Length)

@@ -30,10 +30,6 @@ namespace SegmentationLibrary
         /// <param name="k">Количество кластеров, на которые будет разделено изображение.</param>
         /// <param name="initialCentroids">Двумерный массив начальных центроидов (опционально). Формат: [k, 3], где 3 — значения RGB (R, G, B).</param>
         /// <param name="maxIterations">Максимальное количество итераций алгоритма (по умолчанию 10).</param>
-        /// <returns>Кортеж, содержащий сегментированное изображение, метки кластеров и финальные центроиды.</returns>
-        /// <exception cref="ArgumentNullException">Выбрасывается, если входное изображение <paramref name="bitmap"/> равно null.</exception>
-        /// <exception cref="ArgumentException">Выбрасывается, если <paramref name="k"/> или <paramref name="maxIterations"/> меньше или равны 0,
-        /// или если размеры <paramref name="initialCentroids"/> не соответствуют [k, 3].</exception>
         public (Bitmap Image, int[] Labels, double[,] Centroids) Segment(Bitmap bitmap, int k, double[,] initialCentroids, int maxIterations = 10)
         {
             if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
