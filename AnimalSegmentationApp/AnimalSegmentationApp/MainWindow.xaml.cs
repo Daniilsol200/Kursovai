@@ -9,11 +9,6 @@ using System.Collections.Generic;
 
 namespace AnimalSegmentation
 {
-    /// <summary>
-    /// Главное окно приложения для сегментации изображений животных.
-    /// Предоставляет интерфейс для загрузки изображений, настройки параметров сегментации
-    /// и отображения результатов с использованием алгоритмов CustomKMeans и AccordKMeans.
-    /// </summary>
     public partial class MainWindow : Window
     {
         /// <summary>
@@ -43,7 +38,6 @@ namespace AnimalSegmentation
 
         /// <summary>
         /// Флаг, указывающий, использовать ли пользовательские центроиды для сегментации.
-        /// По умолчанию false (использовать случайные центроиды).
         /// </summary>
         private bool useCustomCentroids = false;
 
@@ -72,8 +66,6 @@ namespace AnimalSegmentation
         /// Обработчик события загрузки окна.
         /// Инициализирует состояние элементов управления и обновляет поля ввода центроидов на основе начального значения K.
         /// </summary>
-        /// <param name="sender">Объект, вызвавший событие (экземпляр MainWindow).</param>
-        /// <param name="e">Аргументы события загрузки окна.</param>
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (CentroidInputs == null)
@@ -100,8 +92,7 @@ namespace AnimalSegmentation
         /// Обработчик события включения флажка использования пользовательских центроидов.
         /// Активирует поля ввода центроидов и кнопку их применения.
         /// </summary>
-        /// <param name="sender">Объект, вызвавший событие (CheckBox).</param>
-        /// <param name="e">Аргументы события изменения состояния флажка.</param>
+
         private void UseCustomCentroidsCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             useCustomCentroids = true;
@@ -113,8 +104,7 @@ namespace AnimalSegmentation
         /// Обработчик события отключения флажка использования пользовательских центроидов.
         /// Деактивирует поля ввода центроидов, кнопку их применения и сбрасывает пользовательские центроиды.
         /// </summary>
-        /// <param name="sender">Объект, вызвавший событие (CheckBox).</param>
-        /// <param name="e">Аргументы события изменения состояния флажка.</param>
+
         private void UseCustomCentroidsCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
             useCustomCentroids = false;
@@ -127,8 +117,6 @@ namespace AnimalSegmentation
         /// Обработчик события нажатия кнопки загрузки изображения.
         /// Открывает диалоговое окно для выбора изображения и отображает его в интерфейсе.
         /// </summary>
-        /// <param name="sender">Объект, вызвавший событие (Button).</param>
-        /// <param name="e">Аргументы события нажатия кнопки.</param>
         private void LoadImageButton_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog
@@ -151,8 +139,7 @@ namespace AnimalSegmentation
         /// Обработчик события изменения текста в поле ввода количества кластеров (K).
         /// Обновляет поля ввода центроидов и сбрасывает пользовательские центроиды при изменении K.
         /// </summary>
-        /// <param name="sender">Объект, вызвавший событие (TextBox).</param>
-        /// <param name="e">Аргументы события изменения текста.</param>
+
         private void KTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (IsLoaded && CentroidInputs != null && int.TryParse(KTextBox?.Text, out int k) && k > 0)
@@ -166,7 +153,7 @@ namespace AnimalSegmentation
         /// Обновляет поля ввода центроидов в зависимости от количества кластеров (k).
         /// Создаёт новые текстовые поля для каждого центроида (RGB).
         /// </summary>
-        /// <param name="k">Количество кластеров, определяющее количество центроидов.</param>
+
         private void UpdateCentroidInputs(int k)
         {
             if (CentroidInputs == null)
@@ -201,9 +188,7 @@ namespace AnimalSegmentation
         /// Обработчик события нажатия кнопки применения пользовательских центроидов.
         /// Считывает значения RGB из текстовых полей и сохраняет их в массив userCentroids.
         /// </summary>
-        /// <param name="sender">Объект, вызвавший событие (Button).</param>
-        /// <param name="e">Аргументы события нажатия кнопки.</param>
-        /// <exception cref="FormatException">Выбрасывается, если значение K некорректно.</exception>
+
         private void ApplyCentroidsButton_Click(object sender, RoutedEventArgs e)
         {
             if (!useCustomCentroids)
@@ -251,9 +236,7 @@ namespace AnimalSegmentation
         /// Выполняет сегментацию изображения с использованием CustomKMeans и AccordKMeans,
         /// измеряет время выполнения, качество сегментации и отображает результаты.
         /// </summary>
-        /// <param name="sender">Объект, вызвавший событие (Button).</param>
-        /// <param name="e">Аргументы события нажатия кнопки.</param>
-        /// <exception cref="FormatException">Выбрасывается, если значения K или maxIterations некорректны.</exception>
+
         private void SegmentButton_Click(object sender, RoutedEventArgs e)
         {
             if (originalBitmap != null)

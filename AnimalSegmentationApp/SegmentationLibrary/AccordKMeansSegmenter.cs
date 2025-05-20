@@ -14,9 +14,7 @@ namespace SegmentationLibrary
         /// Выполняет сегментацию входного изображения на основе заданного количества кластеров (k).
         /// Использует алгоритм K-Means из библиотеки Accord с настройками по умолчанию (10 итераций).
         /// </summary>
-        /// <param name="bitmap">Входное изображение в формате Bitmap, которое будет сегментировано.</param>
-        /// <param name="k">Количество кластеров, на которые будет разделено изображение.</param>
-        /// <returns>Сегментированное изображение в формате Bitmap.</returns>
+
         public Bitmap Segment(Bitmap bitmap, int k)
         {
             return Segment(bitmap, k, null, 10).Image;

@@ -14,8 +14,7 @@ namespace SegmentationLibrary
         /// Каждое наблюдение представляет собой массив из трёх значений (R, G, B).
         /// </summary>
         /// <param name="bitmap">Входное изображение в формате Bitmap, из которого извлекаются данные пикселей.</param>
-        /// <returns>Двумерный массив, где каждый элемент — массив [R, G, B] для соответствующего пикселя.</returns>
-        /// <exception cref="ArgumentNullException">Выбрасывается, если параметр <paramref name="bitmap"/> равен null.</exception>
+
         public static double[][] GetPixelData(Bitmap bitmap)
         {
             if (bitmap == null) throw new ArgumentNullException(nameof(bitmap));
@@ -42,9 +41,7 @@ namespace SegmentationLibrary
         /// <param name="labels">Массив меток кластеров, указывающий, к какому кластеру относится каждый пиксель.</param>
         /// <param name="centroids">Массив центроидов кластеров. Формат: [k, 3], где k — количество кластеров, 3 — значения RGB (R, G, B).</param>
         /// <returns>Значение WCSS, отражающее компактность кластеров (меньше — лучше).</returns>
-        /// <exception cref="ArgumentNullException">Выбрасывается, если <paramref name="pixels"/>, <paramref name="labels"/> или <paramref name="centroids"/> равны null.</exception>
-        /// <exception cref="ArgumentException">Выбрасывается, если длины массивов <paramref name="pixels"/> и <paramref name="labels"/> не совпадают,
-        /// или если размеры <paramref name="centroids"/> некорректны.</exception>
+
         public static double CalculateWcss(double[][] pixels, int[] labels, double[,] centroids)
         {
             if (pixels == null) throw new ArgumentNullException(nameof(pixels));

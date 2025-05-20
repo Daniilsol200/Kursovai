@@ -26,11 +26,6 @@ namespace SegmentationLibrary
         /// Выполняет сегментацию входного изображения с использованием пользовательского алгоритма K-Means.
         /// Позволяет указать начальные центроиды и максимальное количество итераций.
         /// </summary>
-        /// <param name="bitmap">Входное изображение в формате Bitmap, которое будет сегментировано.</param>
-        /// <param name="k">Количество кластеров, на которые будет разделено изображение.</param>
-        /// <param name="initialCentroids">Двумерный массив начальных центроидов (опционально). Формат: [k, 3], где 3 — значения RGB (R, G, B).</param>
-        /// <param name="maxIterations">Максимальное количество итераций алгоритма (по умолчанию 10).</param>
-        /// <returns>Кортеж, содержащий сегментированное изображение, метки кластеров и финальные центроиды.</returns>
         public (Bitmap Image, int[] Labels, double[,] Centroids) Segment(Bitmap bitmap, int k, double[,] initialCentroids, int maxIterations = 10)
         {
             // Проверка входных параметров
