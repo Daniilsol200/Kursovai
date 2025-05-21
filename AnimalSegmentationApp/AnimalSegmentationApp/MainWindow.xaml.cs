@@ -11,19 +11,11 @@ namespace AnimalSegmentation
 {
     public partial class MainWindow : Window
     {
-        /// <summary>
-        /// Исходное изображение, загруженное пользователем для сегментации.
-        /// </summary>
+
         private Bitmap originalBitmap;
 
-        /// <summary>
-        /// Экземпляр сегментатора, использующий пользовательский алгоритм K-Means.
-        /// </summary>
         private CustomKMeans customSegmenter = new CustomKMeans();
 
-        /// <summary>
-        /// Экземпляр сегментатора, использующий алгоритм K-Means из библиотеки Accord.
-        /// </summary>
         private AccordKMeansSegmenter accordSegmenter = new AccordKMeansSegmenter();
 
 
@@ -36,15 +28,8 @@ namespace AnimalSegmentation
         /// </summary>
         private List<TextBox[]> centroidTextBoxes = new List<TextBox[]>();
 
-        /// <summary>
-        /// Флаг, указывающий, использовать ли пользовательские центроиды для сегментации.
-        /// </summary>
         private bool useCustomCentroids = false;
 
-        /// <summary>
-        /// Конструктор главного окна приложения.
-        /// Инициализирует компоненты интерфейса и устанавливает обработчик события загрузки окна.
-        /// </summary>
         public MainWindow()
         {
             try
@@ -62,10 +47,6 @@ namespace AnimalSegmentation
             Loaded += MainWindow_Loaded;
         }
 
-        /// <summary>
-        /// Обработчик события загрузки окна.
-        /// Инициализирует состояние элементов управления и обновляет поля ввода центроидов на основе начального значения K.
-        /// </summary>
         private void MainWindow_Loaded(object sender, RoutedEventArgs e)
         {
             if (CentroidInputs == null)
@@ -92,7 +73,6 @@ namespace AnimalSegmentation
         /// Обработчик события включения флажка использования пользовательских центроидов.
         /// Активирует поля ввода центроидов и кнопку их применения.
         /// </summary>
-
         private void UseCustomCentroidsCheckBox_Checked(object sender, RoutedEventArgs e)
         {
             useCustomCentroids = true;
@@ -100,10 +80,6 @@ namespace AnimalSegmentation
             if (ApplyCentroidsButton != null) ApplyCentroidsButton.IsEnabled = true;
         }
 
-        /// <summary>
-        /// Обработчик события отключения флажка использования пользовательских центроидов.
-        /// Деактивирует поля ввода центроидов, кнопку их применения и сбрасывает пользовательские центроиды.
-        /// </summary>
 
         private void UseCustomCentroidsCheckBox_Unchecked(object sender, RoutedEventArgs e)
         {
@@ -135,11 +111,6 @@ namespace AnimalSegmentation
             }
         }
 
-        /// <summary>
-        /// Обработчик события изменения текста в поле ввода количества кластеров (K).
-        /// Обновляет поля ввода центроидов и сбрасывает пользовательские центроиды при изменении K.
-        /// </summary>
-
         private void KTextBox_TextChanged(object sender, TextChangedEventArgs e)
         {
             if (IsLoaded && CentroidInputs != null && int.TryParse(KTextBox?.Text, out int k) && k > 0)
@@ -153,7 +124,6 @@ namespace AnimalSegmentation
         /// Обновляет поля ввода центроидов в зависимости от количества кластеров (k).
         /// Создаёт новые текстовые поля для каждого центроида (RGB).
         /// </summary>
-
         private void UpdateCentroidInputs(int k)
         {
             if (CentroidInputs == null)
@@ -188,7 +158,6 @@ namespace AnimalSegmentation
         /// Обработчик события нажатия кнопки применения пользовательских центроидов.
         /// Считывает значения RGB из текстовых полей и сохраняет их в массив userCentroids.
         /// </summary>
-
         private void ApplyCentroidsButton_Click(object sender, RoutedEventArgs e)
         {
             if (!useCustomCentroids)

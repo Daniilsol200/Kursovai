@@ -13,7 +13,6 @@ namespace SegmentationLibrary
         /// Извлекает RGB-данные пикселей из изображения в виде массива наблюдений.
         /// Каждое наблюдение представляет собой массив из трёх значений (R, G, B).
         /// </summary>
-        /// <param name="bitmap">Входное изображение в формате Bitmap, из которого извлекаются данные пикселей.</param>
 
         public static double[][] GetPixelData(Bitmap bitmap)
         {
@@ -37,10 +36,6 @@ namespace SegmentationLibrary
         /// Вычисляет метрику WCSS (Within-Cluster Sum of Squares) для оценки качества сегментации.
         /// WCSS измеряет сумму квадратов расстояний от пикселей до центроидов их кластеров.
         /// </summary>
-        /// <param name="pixels">Массив данных пикселей, где каждый элемент — массив [R, G, B].</param>
-        /// <param name="labels">Массив меток кластеров, указывающий, к какому кластеру относится каждый пиксель.</param>
-        /// <param name="centroids">Массив центроидов кластеров. Формат: [k, 3], где k — количество кластеров, 3 — значения RGB (R, G, B).</param>
-        /// <returns>Значение WCSS, отражающее компактность кластеров (меньше — лучше).</returns>
 
         public static double CalculateWcss(double[][] pixels, int[] labels, double[,] centroids)
         {

@@ -14,8 +14,6 @@ namespace SegmentationLibrary
         /// <summary>
         /// Выполняет сегментацию входного изображения на основе заданного количества кластеров (k).
         /// </summary>
-        /// <param name="bitmap">Входное изображение в формате Bitmap, которое будет сегментировано.</param>
-        /// <param name="k">Количество кластеров, на которые будет разделено изображение.</param>
         /// <returns>Сегментированное изображение в формате Bitmap.</returns>
         public Bitmap Segment(Bitmap bitmap, int k)
         {

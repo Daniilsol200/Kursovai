@@ -636,7 +636,7 @@ namespace SegmentationLibrary.Tests
             Assert.AreEqual(3, centroids.GetLength(1));
 
             // Проверяем сходимость (предполагаем, что реализация использует порог 0.1)
-            double maxChange = 0.0;
+            double maxChange = 0.1;
             for (int i = 0; i < k; i++)
             {
                 // Здесь мы не можем напрямую проверить изменение центроидов, но проверяем стабильность
