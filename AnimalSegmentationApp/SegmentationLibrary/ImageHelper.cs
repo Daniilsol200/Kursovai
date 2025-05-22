@@ -5,10 +5,6 @@ using System.Windows.Media.Imaging;
 
 namespace SegmentationLibrary
 {
-    /// <summary>
-    /// Статический класс, предоставляющий вспомогательные методы для преобразования изображений.
-    /// Предназначен для конвертации изображений между форматами Bitmap и BitmapImage.
-    /// </summary>
     public static class ImageHelper
     {
         /// <summary>

@@ -253,7 +253,6 @@ namespace AnimalSegmentation
                         accordCentroidLog += $"Центроид {i + 1}: R={accordCentroids[i, 0]:F2}, G={accordCentroids[i, 1]:F2}, B={accordCentroids[i, 2]:F2}\n";
                     }
 
-                    // Устанавливаем текст в TextBlock элементы
                     if (CustomCentroidText != null)
                     {
                         CustomCentroidText.Text = customCentroidLog;

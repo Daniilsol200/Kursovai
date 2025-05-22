@@ -3,18 +3,10 @@ using System.Drawing;
 
 namespace SegmentationLibrary
 {
-    /// <summary>
-    /// Класс, реализующий пользовательский алгоритм K-Means для сегментации изображений.
-    /// Реализует интерфейс <see cref="ISegmenter"/> для унификации работы с различными сегментаторами.
-    /// </summary>
     public class CustomKMeans : ISegmenter
     {
         private readonly Random rand = new Random();
 
-        /// <summary>
-        /// Выполняет сегментацию входного изображения на основе заданного количества кластеров (k).
-        /// </summary>
-        /// <returns>Сегментированное изображение в формате Bitmap.</returns>
         public Bitmap Segment(Bitmap bitmap, int k)
         {
             return Segment(bitmap, k, null, 10).Image;

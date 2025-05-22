@@ -4,10 +4,6 @@ using Accord.MachineLearning;
 
 namespace SegmentationLibrary
 {
-    /// <summary>
-    /// Класс, реализующий сегментацию изображений с использованием алгоритма K-Means из библиотеки Accord.
-    /// Реализует интерфейс <see cref="ISegmenter"/> для унификации работы с различными сегментаторами.
-    /// </summary>
     public class AccordKMeansSegmenter : ISegmenter
     {
         public Bitmap Segment(Bitmap bitmap, int k)
